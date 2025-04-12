@@ -33,16 +33,8 @@ RUN if [ -n "$PDO_DRIVER" ]; then \
         case "$PDO_DRIVER" in \
             mysql) apk add --no-cache --virtual .build-driver-deps mariadb-connector-c-dev && docker-php-ext-install pdo_mysql ;; \
             dblib) apk add --no-cache --virtual .build-driver-deps freetds-dev && docker-php-ext-install pdo_dblib ;; \
-            firebird) \
-                echo "Installing Firebird dependencies (custom setup)"; \
-                apk add --no-cache --virtual .build-driver-deps build-base && \
-                # Example: Install Firebird manually (adjust as needed)
-                wget https://github.com/FirebirdSQL/firebird/releases/download/<version>/Firebird-<version>.tar.gz && \
-                tar -xzf Firebird-<version>.tar.gz && \
-                cd Firebird-<version> && \
-                ./configure && make && make install && \
-                cd .. && rm -rf Firebird-<version>*; \
-                docker-php-ext-install pdo_firebird ;; \
+            firebird) echo >&2 "❌ Firebird PDO driver is not supported. Aborting."; exit 1 ;; \
+#            firebird) apk add --no-cache --virtual .build-driver-deps firebird-dev && docker-php-ext-install pdo_firebird ;; \
             odbc) apk add --no-cache --virtual .build-driver-deps unixodbc-dev && docker-php-ext-install pdo_odbc ;; \
             pgsql) apk add --no-cache --virtual .build-driver-deps postgresql-dev && docker-php-ext-install pdo_pgsql ;; \
             sqlite) docker-php-ext-install pdo_sqlite ;; \
