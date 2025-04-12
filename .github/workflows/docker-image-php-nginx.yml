@@ -145,7 +145,7 @@ jobs:
           file: ${{ matrix.php_config.dockerfile }}
           build-args: |
             PHP_VERSION=${{ matrix.php_config.php }}
-            ALPINE_VERSION=${{ matrix.php_config.alpine }}
+            ALPINE_VERSION="${{ matrix.php_config.alpine }}"
             PROTOBUF_VERSION=${{ matrix.php_config.protobuf }}
             REDIS_VERSION=${{ matrix.php_config.redis }}
             PDO_DRIVER=${{ matrix.php_config.pdo_driver }}
