@@ -26,12 +26,12 @@ jobs:
             pdo_driver: pgsql
             opcache_file: opcache-php8.ini
             tags: fernandojrdev/php-nginx:8.4-alpine3.20-pgsql
-          - php: '8.4'
-            alpine: '3.20'
-            redis: '6.1.0'
-            pdo_driver: firebird
-            opcache_file: opcache-php8.ini
-            tags: fernandojrdev/php-nginx:8.4-alpine3.20-firebird
+          # - php: '8.4'
+          #   alpine: '3.20'
+          #   redis: '6.1.0'
+          #   pdo_driver: firebird
+          #   opcache_file: opcache-php8.ini
+          #   tags: fernandojrdev/php-nginx:8.4-alpine3.20-firebird
           - php: '8.4'
             alpine: '3.20'
             redis: '6.1.0'
@@ -94,12 +94,12 @@ jobs:
             pdo_driver: pgsql
             opcache_file: ""
             tags: fernandojrdev/php-nginx:7.4-alpine3.16-pgsql
-          - php: '7.4'
-            alpine: '3.16'
-            redis: '6.1.0'
-            pdo_driver: firebird
-            opcache_file: ""
-            tags: fernandojrdev/php-nginx:7.4-alpine3.16-firebird
+          # - php: '7.4'
+          #   alpine: '3.16'
+          #   redis: '6.1.0'
+          #   pdo_driver: firebird
+          #   opcache_file: ""
+          #   tags: fernandojrdev/php-nginx:7.4-alpine3.16-firebird
           - php: '7.4'
             alpine: '3.16'
             redis: '6.1.0'
