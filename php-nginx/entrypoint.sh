@@ -5,6 +5,7 @@ set -e
 exec "$@"
 
 envsubst '$NGINX_ROOT,$NGINX_CLIENT_MAX_BODY_SIZE,$NGINX_WORKER_PROCESS' < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf.tmp
+rm /etc/nginx/nginx.conf
 mv /etc/nginx/nginx.conf.tmp /etc/nginx/nginx.conf
 nginx -t
 
