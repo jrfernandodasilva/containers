@@ -12,111 +12,111 @@ jobs:
       fail-fast: false
       matrix:
         php_config:
-          - php: 8.4
-            alpine: 3.20
-            redis: 6.1.0
+          - php: '8.4'
+            alpine: '3.20'
+            redis: '6.1.0'
             opcache_file: opcache-php8.ini
             tags: fernandojrdev/php-nginx:8.4-alpine3.20
-          - php: 8.4
-            alpine: 3.20
-            redis: 6.1.0
+          - php: '8.4'
+            alpine: '3.20'
+            redis: '6.1.0'
             pdo_driver: pgsql
             opcache_file: opcache-php8.ini
             tags: fernandojrdev/php-nginx:8.4-alpine3.20-pgsql
-          - php: 8.4
-            alpine: 3.20
-            redis: 6.1.0
+          - php: '8.4'
+            alpine: '3.20'
+            redis: '6.1.0'
             pdo_driver: firebird
             opcache_file: opcache-php8.ini
             tags: fernandojrdev/php-nginx:8.4-alpine3.20-firebird
-          - php: 8.4
-            alpine: 3.20
-            redis: 6.1.0
+          - php: '8.4'
+            alpine: '3.20'
+            redis: '6.1.0'
             pdo_driver: sqlite
             opcache_file: opcache-php8.ini
             tags: fernandojrdev/php-nginx:8.4-alpine3.20-sqlite
-          - php: 8.4
-            alpine: 3.20
-            redis: 6.1.0
+          - php: '8.4'
+            alpine: '3.20'
+            redis: '6.1.0'
             pdo_driver: odbc
             opcache_file: opcache-php8.ini
             tags: fernandojrdev/php-nginx:8.4-alpine3.20-odbc
-          - php: 8.4
-            alpine: 3.20
-            redis: 6.1.0
+          - php: '8.4'
+            alpine: '3.20'
+            redis: '6.1.0'
             pdo_driver: dblib
             opcache_file: opcache-php8.ini
             tags: fernandojrdev/php-nginx:8.4-alpine3.20-dblib
-          - php: 8.3
-            alpine: 3.20
-            redis: 6.1.0
+          - php: '8.3'
+            alpine: '3.20'
+            redis: '6.1.0'
             opcache_file: opcache-php8.ini
             tags: fernandojrdev/php-nginx:8.3-alpine3.20
-          - php: 8.2
-            alpine: 3.20
-            redis: 6.1.0
+          - php: '8.2'
+            alpine: '3.20'
+            redis: '6.1.0'
             opcache_file: opcache-php8.ini
             tags: fernandojrdev/php-nginx:8.2-alpine3.20
-          - php: 8.1
-            alpine: 3.20
-            redis: 6.1.0
+          - php: '8.1'
+            alpine: '3.20'
+            redis: '6.1.0'
             opcache_file: opcache-php8.ini
             tags: fernandojrdev/php-nginx:8.1-alpine3.20
-          - php: 8.0
-            alpine: 3.16
-            redis: 6.1.0
+          - php: '8.0'
+            alpine: '3.16'
+            redis: '6.1.0'
             opcache_file: opcache-php8.ini
             tags: fernandojrdev/php-nginx:8.0-alpine3.16
-          - php: 8.0
-            alpine: 3.16
-            protobuf: 3.25.5
-            redis: 6.1.0
+          - php: '8.0'
+            alpine: '3.16'
+            protobuf: '3.25.5'
+            redis: '6.1.0'
             opcache_file: opcache-php8.ini
             dockerfile: php-nginx/Dockerfile-grpc
             tags: fernandojrdev/php-nginx:8.0-alpine3.16-grpc
-          - php: 7.4
-            alpine: 3.16
-            redis: 6.1.0
+          - php: '7.4'
+            alpine: '3.16'
+            redis: '6.1.0'
             opcache_file: ""
             tags: fernandojrdev/php-nginx:7.4-alpine3.16
-          - php: 7.4
-            alpine: 3.16
-            redis: 6.1.0
+          - php: '7.4'
+            alpine: '3.16'
+            redis: '6.1.0'
             pdo_driver: pgsql
             opcache_file: ""
             tags: fernandojrdev/php-nginx:7.4-alpine3.16-pgsql
-          - php: 7.4
-            alpine: 3.16
-            redis: 6.1.0
+          - php: '7.4'
+            alpine: '3.16'
+            redis: '6.1.0'
             pdo_driver: firebird
             opcache_file: ""
             tags: fernandojrdev/php-nginx:7.4-alpine3.16-firebird
-          - php: 7.4
-            alpine: 3.16
-            redis: 6.1.0
+          - php: '7.4'
+            alpine: '3.16'
+            redis: '6.1.0'
             pdo_driver: sqlite
             opcache_file: ""
             tags: fernandojrdev/php-nginx:7.4-alpine3.16-sqlite
-          - php: 7.4
-            alpine: 3.16
-            redis: 6.1.0
+          - php: '7.4'
+            alpine: '3.16'
+            redis: '6.1.0'
             pdo_driver: odbc
             opcache_file: ""
             tags: fernandojrdev/php-nginx:7.4-alpine3.16-odbc
-          - php: 7.4
-            alpine: 3.16
-            redis: 6.1.0
+          - php: '7.4'
+            alpine: '3.16'
+            redis: '6.1.0'
             pdo_driver: dblib
             opcache_file: ""
             tags: fernandojrdev/php-nginx:7.4-alpine3.16-dblib
-          - php: 7.3
-            alpine: 3.15
-            redis: 6.0.2
+          - php: '7.3'
+            alpine: '3.15'
+            redis: '6.0.2'
             opcache_file: ""
             tags: fernandojrdev/php-nginx:7.3-alpine3.15
-          - php: 7.2
-            alpine: 3.12
-            redis: 6.0.2
+          - php: '7.2'
+            alpine: '3.12'
+            redis: '6.0.2'
             opcache_file: ""
             tags: fernandojrdev/php-nginx:7.2-alpine3.12
     steps:
@@ -145,7 +145,7 @@ jobs:
           file: ${{ matrix.php_config.dockerfile }}
           build-args: |
             PHP_VERSION=${{ matrix.php_config.php }}
-            ALPINE_VERSION="${{ matrix.php_config.alpine }}"
+            ALPINE_VERSION=${{ matrix.php_config.alpine }}
             PROTOBUF_VERSION=${{ matrix.php_config.protobuf }}
             REDIS_VERSION=${{ matrix.php_config.redis }}
             PDO_DRIVER=${{ matrix.php_config.pdo_driver }}
