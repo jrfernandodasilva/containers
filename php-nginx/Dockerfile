@@ -28,16 +28,21 @@ RUN apk upgrade --no-cache && \
 RUN docker-php-ext-install pdo opcache pcntl intl zip
 
 # Conditional installation of PDO driver
-ARG PDO_DRIVER=mysql
-RUN case "$PDO_DRIVER" in \
-        mysql) apk add --no-cache --virtual .build-driver-deps mariadb-connector-c-dev && docker-php-ext-install pdo_mysql ;; \ 
-        dblib) apk add --no-cache --virtual .build-driver-deps freetds-dev && docker-php-ext-install pdo_dblib ;; \
-        firebird) apk add --no-cache --virtual .build-driver-deps firebird-dev && docker-php-ext-install pdo_firebird ;; \
-        odbc) apk add --no-cache --virtual .build-driver-deps unixodbc-dev && docker-php-ext-install pdo_odbc ;; \
-        pgsql) apk add --no-cache --virtual .build-driver-deps postgresql-dev && docker-php-ext-install pdo_pgsql ;; \
-        sqlite) docker-php-ext-install pdo_sqlite ;; \
-        *) echo "Unsupported PDO Driver: $PDO_DRIVER" && exit 1 ;; \
-    esac
+ARG PDO_DRIVER
+RUN if [ -n "$PDO_DRIVER" ]; then \
+        case "$PDO_DRIVER" in \
+            mysql) apk add --no-cache --virtual .build-driver-deps mariadb-connector-c-dev && docker-php-ext-install pdo_mysql ;; \
+            dblib) apk add --no-cache --virtual .build-driver-deps freetds-dev && docker-php-ext-install pdo_dblib ;; \
+            firebird) apk add --no-cache --virtual .build-driver-deps firebird-dev && docker-php-ext-install pdo_firebird ;; \
+            odbc) apk add --no-cache --virtual .build-driver-deps unixodbc-dev && docker-php-ext-install pdo_odbc ;; \
+            pgsql) apk add --no-cache --virtual .build-driver-deps postgresql-dev && docker-php-ext-install pdo_pgsql ;; \
+            sqlite) docker-php-ext-install pdo_sqlite ;; \
+            *) echo "Unsupported PDO Driver: $PDO_DRIVER" && exit 1 ;; \
+        esac; \
+    else \
+        echo "No PDO driver specified, installing pdo_mysql as default"; \
+        apk add --no-cache --virtual .build-driver-deps mariadb-connector-c-dev && docker-php-ext-install pdo_mysql; \
+    fi
 
 COPY --from=redis_ext /redis.so /tmp/redis.so
 
@@ -71,7 +76,7 @@ WORKDIR /app/public
 RUN rm -rf *
 
 COPY entrypoint.sh /entrypoint.sh
-ENTRYPOINT ["sh", "/entrypoint.sh" ]
+ENTRYPOINT ["sh", "/entrypoint.sh"]
 CMD []
 
 EXPOSE 80
