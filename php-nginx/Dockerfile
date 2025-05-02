@@ -22,10 +22,10 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY php-fpm.ini "$PHP_INI_DIR/php-fpm.ini"
 
 RUN apk upgrade --no-cache && \
-    apk add --no-cache --virtual .build-deps libzip-dev icu-dev && \
-    apk add --no-cache nginx gettext libstdc++ libzip icu-libs
+    apk add --no-cache --virtual .build-deps libzip-dev icu-dev libexif-dev && \
+    apk add --no-cache nginx gettext libstdc++ libzip icu-libs libexif    
 
-RUN docker-php-ext-install pdo opcache pcntl intl zip
+RUN docker-php-ext-install pdo opcache pcntl intl zip exif bcmath sockets
 
 # Conditional installation of PDO driver
 ARG PDO_DRIVER
