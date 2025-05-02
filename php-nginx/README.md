@@ -3,9 +3,11 @@
 This image provides a pre-configured environment for running PHP applications with Nginx and PHP-FPM.
 
 ## Installed extensions
+- BCMath
 - Ctype
 - cURL
 - DOM
+- Exif
 - Fileinfo
 - Filter
 - gRPC
@@ -21,6 +23,7 @@ This image provides a pre-configured environment for running PHP applications wi
 - Protobuf
 - Redis
 - Session
+- Sockets
 - sqlite3
 - Tokenizer
 - XML
