@@ -156,7 +156,7 @@ jobs:
         uses: docker/build-push-action@v5.0.0
         with:
           context: ./php-nginx
-          file: ${{ matrix.php_config.dockerfile }}
+          file: ${{ matrix.php_config.dockerfile || 'php-nginx/Dockerfile' }}
           build-args: |
             PHP_VERSION=${{ matrix.php_config.php }}
             ALPINE_VERSION=${{ matrix.php_config.alpine }}
