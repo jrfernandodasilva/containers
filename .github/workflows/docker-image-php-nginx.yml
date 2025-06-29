@@ -157,6 +157,7 @@ jobs:
         with:
           context: ./php-nginx
           file: ${{ matrix.php_config.dockerfile || 'php-nginx/Dockerfile' }}
+          platforms: linux/amd64,linux/arm64
           build-args: |
             PHP_VERSION=${{ matrix.php_config.php }}
             ALPINE_VERSION=${{ matrix.php_config.alpine }}
