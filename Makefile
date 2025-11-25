@@ -14,6 +14,8 @@ help:
 	@echo "  $(GREEN)build-php-nginx-7$(RESET): Build PHP-NGINX 7.x images"
 	@echo "  $(GREEN)publish-php-nginx-8$(RESET): Publish PHP-NGINX 8.x images"
 	@echo "  $(GREEN)publish-php-nginx-7$(RESET): Publish PHP-NGINX 7.x images"
+	@echo "  $(GREEN)build-php-nginx-8.5$(RESET): Build PHP-NGINX 8.5 image with MySQL and SQLite PDO drivers"
+	@echo "  $(GREEN)build-php-nginx-8.4.15$(RESET): Build PHP-NGINX 8.4.15 image with MySQL and SQLite PDO drivers"
 	@echo "  $(GREEN)build-php-nginx-8.4$(RESET): Build PHP-NGINX 8.4 image with MySQL and SQLite PDO drivers"
 	@echo "  $(GREEN)build-php-nginx-8.4-pgsql$(RESET): Build PHP-NGINX 8.4 image with PostgreSQL PDO driver"
 	@echo "  $(GREEN)build-php-nginx-8.4-firebird$(RESET): Build PHP-NGINX 8.4 image with Firebird PDO driver"
@@ -25,6 +27,8 @@ help:
 	@echo "  $(GREEN)build-php-nginx-8.1$(RESET): Build PHP-NGINX 8.1 image with MySQL and SQLite PDO drivers"
 	@echo "  $(GREEN)build-php-nginx-8.0$(RESET): Build PHP-NGINX 8.0 image with MySQL and SQLite PDO drivers"
 	@echo "  $(GREEN)build-php-nginx-8.0-grpc$(RESET): Build PHP-NGINX 8.0 image with MySQL and SQLite PDO drivers and gRPC support"
+	@echo "  $(GREEN)publish-php-nginx-8.5$(RESET): Publish on DockerHub the PHP-NGINX 8.5 image with MySQL and SQLite PDO drivers"
+	@echo "  $(GREEN)publish-php-nginx-8.4.15$(RESET): Publish on DockerHub the PHP-NGINX 8.4.15 image with MySQL and SQLite PDO drivers"
 	@echo "  $(GREEN)publish-php-nginx-8.4$(RESET): Publish on DockerHub the PHP-NGINX 8.4 image with MySQL and SQLite PDO drivers"
 	@echo "  $(GREEN)publish-php-nginx-8.3$(RESET): Publish on DockerHub the PHP-NGINX 8.3 image with MySQL and SQLite PDO drivers"
 	@echo "  $(GREEN)publish-php-nginx-8.2$(RESET): Publish on DockerHub the PHP-NGINX 8.2 image with MySQL and SQLite PDO drivers"
@@ -61,9 +65,27 @@ build-php-nginx: build-php-nginx-8 build-php-nginx-7
 publish-php-nginx: publish-php-nginx-8 publish-php-nginx-7
 
 # PHP-NGINX 8.x
-build-php-nginx-8: build-php-nginx-8.4  build-php-nginx-8.4-pgsql build-php-nginx-8.4-firebird build-php-nginx-8.4-sqlite build-php-nginx-8.4-odbc build-php-nginx-8.4-dblib build-php-nginx-8.3 build-php-nginx-8.2 build-php-nginx-8.1 build-php-nginx-8.0 build-php-nginx-8.0-grpc
+build-php-nginx-8: build-php-nginx-8.5 build-php-nginx-8.4.15 build-php-nginx-8.4  build-php-nginx-8.4-pgsql build-php-nginx-8.4-firebird build-php-nginx-8.4-sqlite build-php-nginx-8.4-odbc build-php-nginx-8.4-dblib build-php-nginx-8.3 build-php-nginx-8.2 build-php-nginx-8.1 build-php-nginx-8.0 build-php-nginx-8.0-grpc
 
-publish-php-nginx-8: publish-php-nginx-8.4 publish-php-nginx-8.3 publish-php-nginx-8.2 publish-php-nginx-8.1 publish-php-nginx-8.0 publish-php-nginx-8.0-grpc
+publish-php-nginx-8: publish-php-nginx-8.5 publish-php-nginx-8.4.15 publish-php-nginx-8.4 publish-php-nginx-8.3 publish-php-nginx-8.2 publish-php-nginx-8.1 publish-php-nginx-8.0 publish-php-nginx-8.0-grpc
+
+build-php-nginx-8.5:
+	@docker build \
+		--build-arg PHP_VERSION=8.5 \
+		--build-arg ALPINE_VERSION=3.22 \
+		--build-arg REDIS_VERSION=6.3.0 \
+		--build-arg OPCACHE_FILE_NAME=opcache-php8.ini \
+		-t php-nginx:8.5 \
+		./php-nginx
+
+build-php-nginx-8.4.15:
+	@docker build \
+		--build-arg PHP_VERSION=8.4.15 \
+		--build-arg ALPINE_VERSION=3.22 \
+		--build-arg REDIS_VERSION=6.3.0 \
+		--build-arg OPCACHE_FILE_NAME=opcache-php8.ini \
+		-t php-nginx:8.4.15 \
+		./php-nginx
 
 build-php-nginx-8.4:
 	@docker build \
@@ -170,6 +192,16 @@ build-php-nginx-8.0-grpc:
 		-t php-nginx:8.0-grpc \
 		-f php-nginx/Dockerfile-grpc \
 		./php-nginx
+
+publish-php-nginx-8.5:
+	@docker tag php-nginx:8.5 fernandojrdev/php-nginx:8.5-alpine3.22
+	@docker push fernandojrdev/php-nginx:8.5-alpine3.22
+	@docker rmi fernandojrdev/php-nginx:8.5-alpine3.22
+
+publish-php-nginx-8.4.15:
+	@docker tag php-nginx:8.4.15 fernandojrdev/php-nginx:8.4.15-alpine3.22
+	@docker push fernandojrdev/php-nginx:8.4.15-alpine3.22
+	@docker rmi fernandojrdev/php-nginx:8.4.15-alpine3.22
 
 publish-php-nginx-8.4:
 	@docker tag php-nginx:8.4 fernandojrdev/php-nginx:8.4-alpine3.20
