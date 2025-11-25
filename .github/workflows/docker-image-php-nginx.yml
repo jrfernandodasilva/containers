@@ -14,6 +14,18 @@ jobs:
       fail-fast: false
       matrix:
         php_config:
+          - php: '8.5'
+            alpine: '3.22'
+            redis: '6.3.0'
+            pdo_driver: mysql
+            opcache_file: opcache-php8.ini
+            tags: fernandojrdev/php-nginx:8.5-alpine3.22
+          - php: '8.4.15'
+            alpine: '3.22'
+            redis: '6.3.0'
+            pdo_driver: mysql
+            opcache_file: opcache-php8.ini
+            tags: fernandojrdev/php-nginx:8.4.15-alpine3.22
           - php: '8.4'
             alpine: '3.20'
             redis: '6.1.0'
