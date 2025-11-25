@@ -1,5 +1,5 @@
-ARG PHP_VERSION
-ARG ALPINE_VERSION
+ARG PHP_VERSION=8.5
+ARG ALPINE_VERSION=3.22
 
 FROM php:${PHP_VERSION}-alpine${ALPINE_VERSION} AS build_essentials
 
@@ -25,7 +25,8 @@ RUN apk upgrade --no-cache && \
     apk add --no-cache --virtual .build-deps libzip-dev icu-dev libexif-dev linux-headers && \
     apk add --no-cache nginx gettext libstdc++ libzip icu-libs libexif
 
-RUN docker-php-ext-install pdo opcache pcntl intl zip exif bcmath sockets
+RUN docker-php-ext-install pcntl intl zip exif bcmath sockets && \
+    docker-php-ext-enable opcache || true
 
 # Conditional installation of PDO driver
 ARG PDO_DRIVER
