@@ -148,9 +148,7 @@ jobs:
       - name: Validate Docker Tags
         run: |
           echo "Validating tag: ${{ matrix.php_config.tags }}"
-          # Adicione sua lógica de validação de tag aqui
-          # Exemplo básico com regex:
-          if [[ "${{ matrix.php_config.tags }}" =~ ^fernandojrdev/php-nginx:[0-9]+\.[0-9]+-alpine[0-9]+\.[0-9]+(-[a-z]+)?$ ]]; then
+          if [[ "${{ matrix.php_config.tags }}" =~ ^fernandojrdev/php-nginx:[0-9]+(\.[0-9]+){1,2}-alpine[0-9]+\.[0-9]+(-[a-z]+)?$ ]]; then
             echo "Tag '${{ matrix.php_config.tags }}' is valid."
           else
             echo "Error: Tag '${{ matrix.php_config.tags }}' does not match expected format."
