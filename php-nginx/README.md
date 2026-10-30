@@ -49,9 +49,12 @@ FROM fernandojrdev/php-nginx:8.4-alpine3.24
 # copy the whole project to the default workdir /app/public
 COPY . .
 
-# define your startup command (optional)
+# optional: a custom command runs INSTEAD of nginx + php-fpm (e.g. a queue worker)
 CMD [ "my", "custom", "command" ]
 ```
+
+Without a `CMD`, the container starts nginx and php-fpm. With a `CMD` (or `docker run <image> <command>`), the
+environment variables are still applied to the config files, but only your command runs.
 
 To customize the nginx configuration, change the file located in `/etc/nginx/nginx.conf` as needed for the best
 performance of your application. If you only want to change the root directory, use the environment variable `NGINX_ROOT`.
