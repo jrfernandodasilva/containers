@@ -236,7 +236,7 @@ publish-php-nginx-8.0-grpc:
 # PHP-NGINX 7.x
 build-php-nginx-7: build-php-nginx-7.4 build-php-nginx-7.4-pgsql build-php-nginx-7.4-firebird build-php-nginx-7.4-sqlite build-php-nginx-7.4-odbc build-php-nginx-7.4-dblib build-php-nginx-7.3 build-php-nginx-7.2
 
-publish-php-nginx-8: publish-php-nginx-7.4 publish-php-nginx-7.3 publish-php-nginx-7.2
+publish-php-nginx-7: publish-php-nginx-7.4 publish-php-nginx-7.3 publish-php-nginx-7.2
 
 build-php-nginx-7.4:
 	@docker build \
