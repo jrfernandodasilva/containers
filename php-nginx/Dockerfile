@@ -1,5 +1,5 @@
 ARG PHP_VERSION=8.5
-ARG ALPINE_VERSION=3.22
+ARG ALPINE_VERSION=3.24
 
 FROM php:${PHP_VERSION}-alpine${ALPINE_VERSION} AS build_essentials
 
@@ -25,20 +25,33 @@ RUN apk upgrade --no-cache && \
     apk add --no-cache --virtual .build-deps libzip-dev icu-dev libexif-dev linux-headers && \
     apk add --no-cache nginx gettext libstdc++ libzip icu-libs libexif
 
+# PHP 8.5+ has opcache compiled in, and docker-php-ext-enable fails on it.
 RUN docker-php-ext-install pcntl intl zip exif bcmath sockets && \
-    docker-php-ext-enable opcache || true
+    { php -m | grep -q 'Zend OPcache' || docker-php-ext-enable opcache; }
+
+# gd with jpeg/webp/freetype. Runtime libs stay; *-dev are removed in the same layer.
+# PHP < 7.4 uses the old --with-*-dir flags.
+RUN apk add --no-cache libpng libjpeg-turbo libwebp freetype \
+    && apk add --no-cache --virtual .gd-build-deps libpng-dev libjpeg-turbo-dev libwebp-dev freetype-dev \
+    && if php -r 'exit(PHP_VERSION_ID < 70400 ? 0 : 1);'; then \
+         docker-php-ext-configure gd --with-jpeg-dir=/usr --with-png-dir=/usr --with-webp-dir=/usr --with-freetype-dir=/usr; \
+       else \
+         docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype; \
+       fi \
+    && docker-php-ext-install gd \
+    && apk del .gd-build-deps
 
 # Conditional installation of PDO driver
 ARG PDO_DRIVER
 RUN if [ -n "$PDO_DRIVER" ]; then \
         case "$PDO_DRIVER" in \
             mysql) apk add --no-cache --virtual .build-driver-deps mariadb-connector-c-dev && docker-php-ext-install pdo_mysql ;; \
-            dblib) apk add --no-cache --virtual .build-driver-deps freetds-dev && docker-php-ext-install pdo_dblib ;; \
+            dblib) apk add --no-cache --virtual .build-driver-deps freetds-dev && apk add --no-cache freetds && docker-php-ext-install pdo_dblib ;; \
             firebird) echo >&2 "❌ Firebird PDO driver is not supported. Aborting."; exit 1 ;; \
 #            firebird) apk add --no-cache --virtual .build-driver-deps firebird-dev && docker-php-ext-install pdo_firebird ;; \
-            odbc) apk add --no-cache --virtual .build-driver-deps unixodbc-dev && docker-php-ext-install pdo_odbc ;; \
-            pgsql) apk add --no-cache --virtual .build-driver-deps postgresql-dev && docker-php-ext-install pdo_pgsql ;; \
-            sqlite) docker-php-ext-install pdo_sqlite ;; \
+            odbc) apk add --no-cache --virtual .build-driver-deps unixodbc-dev && apk add --no-cache unixodbc && docker-php-ext-configure pdo_odbc --with-pdo-odbc=unixODBC,/usr && docker-php-ext-install pdo_odbc ;; \
+            pgsql) apk add --no-cache --virtual .build-driver-deps postgresql-dev && apk add --no-cache libpq && docker-php-ext-install pdo_pgsql ;; \
+            sqlite) echo "pdo_sqlite is bundled in the base image, nothing to install" ;; \
             *) echo "Unsupported PDO Driver: $PDO_DRIVER" && exit 1 ;; \
         esac; \
     else \
@@ -52,7 +65,8 @@ RUN mv /tmp/redis.so $(php-config --extension-dir)/ && \
     docker-php-ext-enable redis
 
 RUN docker-php-source delete && \
-    apk del .build-deps .build-driver-deps && \
+    apk del .build-deps && \
+    { ! apk info -e .build-driver-deps >/dev/null || apk del .build-driver-deps; } && \
     rm -rf /var/cache/apk/* /tmp/*
 
 ARG OPCACHE_FILE_NAME=opcache-php7.ini
