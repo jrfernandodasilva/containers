@@ -33,12 +33,12 @@ ARG PDO_DRIVER
 RUN if [ -n "$PDO_DRIVER" ]; then \
         case "$PDO_DRIVER" in \
             mysql) apk add --no-cache --virtual .build-driver-deps mariadb-connector-c-dev && docker-php-ext-install pdo_mysql ;; \
-            dblib) apk add --no-cache --virtual .build-driver-deps freetds-dev && docker-php-ext-install pdo_dblib ;; \
+            dblib) apk add --no-cache --virtual .build-driver-deps freetds-dev && apk add --no-cache freetds && docker-php-ext-install pdo_dblib ;; \
             firebird) echo >&2 "❌ Firebird PDO driver is not supported. Aborting."; exit 1 ;; \
 #            firebird) apk add --no-cache --virtual .build-driver-deps firebird-dev && docker-php-ext-install pdo_firebird ;; \
-            odbc) apk add --no-cache --virtual .build-driver-deps unixodbc-dev && docker-php-ext-install pdo_odbc ;; \
-            pgsql) apk add --no-cache --virtual .build-driver-deps postgresql-dev && docker-php-ext-install pdo_pgsql ;; \
-            sqlite) docker-php-ext-install pdo_sqlite ;; \
+            odbc) apk add --no-cache --virtual .build-driver-deps unixodbc-dev && apk add --no-cache unixodbc && docker-php-ext-configure pdo_odbc --with-pdo-odbc=unixODBC,/usr && docker-php-ext-install pdo_odbc ;; \
+            pgsql) apk add --no-cache --virtual .build-driver-deps postgresql-dev && apk add --no-cache libpq && docker-php-ext-install pdo_pgsql ;; \
+            sqlite) echo "pdo_sqlite is bundled in the base image, nothing to install" ;; \
             *) echo "Unsupported PDO Driver: $PDO_DRIVER" && exit 1 ;; \
         esac; \
     else \
@@ -52,7 +52,8 @@ RUN mv /tmp/redis.so $(php-config --extension-dir)/ && \
     docker-php-ext-enable redis
 
 RUN docker-php-source delete && \
-    apk del .build-deps .build-driver-deps && \
+    apk del .build-deps && \
+    { ! apk info -e .build-driver-deps >/dev/null || apk del .build-driver-deps; } && \
     rm -rf /var/cache/apk/* /tmp/*
 
 ARG OPCACHE_FILE_NAME=opcache-php7.ini
