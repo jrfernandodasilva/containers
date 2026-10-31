@@ -25,8 +25,9 @@ RUN apk upgrade --no-cache && \
     apk add --no-cache --virtual .build-deps libzip-dev icu-dev libexif-dev linux-headers && \
     apk add --no-cache nginx gettext libstdc++ libzip icu-libs libexif
 
+# PHP 8.5+ has opcache compiled in, and docker-php-ext-enable fails on it.
 RUN docker-php-ext-install pcntl intl zip exif bcmath sockets && \
-    docker-php-ext-enable opcache || true
+    { php -m | grep -q 'Zend OPcache' || docker-php-ext-enable opcache; }
 
 # gd with jpeg/webp/freetype. Runtime libs stay; *-dev are removed in the same layer.
 # PHP < 7.4 uses the old --with-*-dir flags.
