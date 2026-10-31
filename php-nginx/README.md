@@ -155,7 +155,7 @@ COPY zz-custom.ini /usr/local/etc/php/conf.d/zz-custom.ini
 Or mount it at runtime:
 
 ```sh
-docker run -v ./zz-custom.ini:/usr/local/etc/php/conf.d/zz-custom.ini:ro fernandojrdev/php-nginx:8.4.27-alpine3.24
+docker run -v "$(pwd)/zz-custom.ini":/usr/local/etc/php/conf.d/zz-custom.ini:ro fernandojrdev/php-nginx:8.4.27-alpine3.24
 ```
 
 A setting in your file wins over its environment variable: with `memory_limit` set there, `PHP_MEMORY_LIMIT` no longer applies.
