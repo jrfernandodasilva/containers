@@ -28,6 +28,18 @@ RUN apk upgrade --no-cache && \
 RUN docker-php-ext-install pcntl intl zip exif bcmath sockets && \
     docker-php-ext-enable opcache || true
 
+# gd com suporte a jpeg/webp/freetype. Libs de runtime ficam; *-dev saem na mesma layer.
+# PHP < 7.4 usa as flags antigas --with-*-dir.
+RUN apk add --no-cache libpng libjpeg-turbo libwebp freetype \
+    && apk add --no-cache --virtual .gd-build-deps libpng-dev libjpeg-turbo-dev libwebp-dev freetype-dev \
+    && if php -r 'exit(PHP_VERSION_ID < 70400 ? 0 : 1);'; then \
+         docker-php-ext-configure gd --with-jpeg-dir=/usr --with-png-dir=/usr --with-webp-dir=/usr --with-freetype-dir=/usr; \
+       else \
+         docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype; \
+       fi \
+    && docker-php-ext-install gd \
+    && apk del .gd-build-deps
+
 # Conditional installation of PDO driver
 ARG PDO_DRIVER
 RUN if [ -n "$PDO_DRIVER" ]; then \

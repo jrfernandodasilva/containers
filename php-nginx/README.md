@@ -10,6 +10,7 @@ This image provides a pre-configured environment for running PHP applications wi
 - Exif
 - Fileinfo
 - Filter
+- GD (JPEG, PNG, WebP, FreeType)
 - gRPC
 - Hash
 - Internationalization (intl)
