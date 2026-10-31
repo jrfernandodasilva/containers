@@ -31,7 +31,7 @@ The shell is zsh: an unquoted `$VAR` is not word-split, so `for t in $TAGS` runs
 
 The variant list is defined twice, by hand:
 
-- `.github/workflows/docker-image-php-nginx.yml`: the `matrix.php_config` entries. This is the real release path. It builds `linux/amd64,linux/arm64` and pushes every entry.
+- `.github/workflows/docker-image-php-nginx.yml`: the `matrix.php_config` entries. This is the real release path. The `build` job builds each entry once per platform on a native runner (`ubuntu-26.04` for amd64, `ubuntu-26.04-arm` for arm64) and pushes by digest. The `merge` job then creates the tag from both digests with `docker buildx imagetools create`. `merge` reuses the same list through the YAML anchor `*php_configs`, so edit only the list under `build`.
 - `Makefile`: one `build-*` and one `publish-*` target per variant, for local builds and manual publishing.
 
 Adding, removing, or bumping a variant means editing both files. `php-nginx/README.md` uses `8.4.<patch>-alpine3.XX` in its examples, so update it when 8.4 is bumped. The `firebird`/`sqlite`/`odbc` targets exist but are left out of the aggregate targets, matching the commented-out CI entries (`firebird` always fails, see below).
