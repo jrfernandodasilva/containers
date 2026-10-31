@@ -142,12 +142,10 @@ a name that sorts after the image's files (for example `zz-custom.ini`):
 
 ```ini
 ; zz-custom.ini
-memory_limit = 512M
-
-; also send PHP errors to nginx, which logs them with the client and request.
-; The official image turns this off in docker-fpm.ini, because php-fpm already logs every error:
-; with it on, each error appears twice in `docker logs`.
-fastcgi.logging = On
+; default: UTC
+date.timezone = America/Sao_Paulo
+; default: 30 (seconds)
+max_execution_time = 60
 ```
 
 ```dockerfile
