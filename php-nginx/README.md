@@ -15,7 +15,7 @@ This image provides a pre-configured environment for running PHP applications wi
 - Hash
 - Internationalization (intl)
 - Mbstring
-- MySQL
+- MySQL (other tags swap it for another driver, see [Database Drivers](#database-drivers))
 - OPCache
 - OpenSSL
 - PCRE
@@ -125,10 +125,18 @@ The settings can be customized easily by replacing the image tag with the desire
       docker run --rm -it fernandojrdev/php-nginx:8.4.27-alpine3.24 cat /usr/local/etc/php/conf.d/php-ext.ini
       ```
 
-## Custom Tags for Other Database Drivers
+## Database Drivers
 
-This image is designed to be easily extensible, allowing build custom tags with support for additional database drivers such as `pdo_pgsql`, `pdo_firebird`, `pdo_dblib` and `pdo_odbc`. <br/>
-If necessary, we can quickly launch a tag with the desired driver.
+Tags without a suffix ship `pdo_mysql`. Tags with a driver suffix replace it with another PDO driver:
+
+| Suffix | Driver | Available for |
+|---|---|---|
+| `-pgsql` | `pdo_pgsql` | `8.4.27-alpine3.24`, `7.4.33-alpine3.16` |
+| `-dblib` | `pdo_dblib` (SQL Server / Sybase via FreeTDS) | `8.4.27-alpine3.24`, `7.4.33-alpine3.16` |
+
+Example: `fernandojrdev/php-nginx:8.4.27-alpine3.24-pgsql`.
+
+`pdo_sqlite` is included in every tag. `pdo_odbc` is supported by the build but not published; if you need it, or another PHP version with a driver above, open an issue.
 
 ## Dockerhub
 
