@@ -35,7 +35,6 @@ RUN pecl install redis-$REDIS_VERSION && \
 FROM php:${PHP_VERSION}-fpm-alpine${ALPINE_VERSION}
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
-COPY php-fpm.ini "$PHP_INI_DIR/php-fpm.ini"
 
 RUN apk upgrade --no-cache && \
     apk add --no-cache --virtual .build-deps libzip-dev icu-dev libexif-dev linux-headers && \
