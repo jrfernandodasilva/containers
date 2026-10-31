@@ -134,6 +134,34 @@ The settings can be customized easily by replacing the image tag with the desire
       docker run --rm -it fernandojrdev/php-nginx:8.4.27-alpine3.24 cat /usr/local/etc/php/conf.d/php-ext.ini
       ```
 
+## Custom PHP settings
+
+PHP and PHP-FPM load `/usr/local/etc/php/php.ini` and then every `/usr/local/etc/php/conf.d/*.ini` in alphabetical
+order, so a later file overrides an earlier one. To change any PHP setting, add your own `.ini` file to `conf.d/` with
+a name that sorts after the image's files (for example `zz-custom.ini`):
+
+```ini
+; zz-custom.ini
+memory_limit = 512M
+
+; also send PHP errors to nginx, which logs them with the client and request.
+; The official image turns this off in docker-fpm.ini, because php-fpm already logs every error:
+; with it on, each error appears twice in `docker logs`.
+fastcgi.logging = On
+```
+
+```dockerfile
+COPY zz-custom.ini /usr/local/etc/php/conf.d/zz-custom.ini
+```
+
+Or mount it at runtime:
+
+```sh
+docker run -v ./zz-custom.ini:/usr/local/etc/php/conf.d/zz-custom.ini:ro fernandojrdev/php-nginx:8.4.27-alpine3.24
+```
+
+A setting in your file wins over its environment variable: with `memory_limit` set there, `PHP_MEMORY_LIMIT` no longer applies.
+
 ## Database Drivers
 
 Tags without a suffix ship `pdo_mysql`. Tags with a driver suffix replace it with another PDO driver:
