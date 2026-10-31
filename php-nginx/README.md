@@ -2,6 +2,24 @@
 
 This image provides a pre-configured environment for running PHP applications with Nginx and PHP-FPM.
 
+## Available tags
+
+Every tag is built for `linux/amd64` and `linux/arm64`, and pins the exact PHP patch version.
+
+| Tag | PHP | Alpine |
+|---|---|---|
+| `8.5.12-alpine3.24` | 8.5.12 | 3.24 |
+| `8.4.27-alpine3.24` (also `-pgsql`, `-dblib`) | 8.4.27 | 3.24 |
+| `8.3.36-alpine3.24` | 8.3.36 | 3.24 |
+| `8.2.35-alpine3.24` | 8.2.35 | 3.24 |
+| `8.1.34-alpine3.22` | 8.1.34 | 3.22 |
+| `8.0.30-alpine3.16` (also `-grpc`) | 8.0.30 | 3.16 |
+| `7.4.33-alpine3.16` (also `-pgsql`, `-dblib`) | 7.4.33 | 3.16 |
+| `7.3.33-alpine3.15` | 7.3.33 | 3.15 |
+| `7.2.34-alpine3.12` | 7.2.34 | 3.12 |
+
+Suffixes: `-pgsql` and `-dblib` swap the PDO driver (see [Database Drivers](#database-drivers)), `-grpc` adds gRPC and Protobuf (see [below](#images-with-the--grpc-tag)).
+
 ## Installed extensions
 - BCMath
 - Ctype
@@ -11,7 +29,6 @@ This image provides a pre-configured environment for running PHP applications wi
 - Fileinfo
 - Filter
 - GD (JPEG, PNG, WebP, FreeType)
-- gRPC
 - Hash
 - Internationalization (intl)
 - Mbstring
@@ -21,7 +38,6 @@ This image provides a pre-configured environment for running PHP applications wi
 - PCRE
 - PDO
 - Process Control (pcntl)
-- Protobuf
 - Redis
 - Session
 - Sockets
@@ -55,7 +71,9 @@ CMD [ "my", "custom", "command" ]
 ```
 
 Without a `CMD`, the container starts nginx and php-fpm. With a `CMD` (or `docker run <image> <command>`), the
-environment variables are still applied to the config files, but only your command runs.
+environment variables are still applied to the config files, but only your command runs. Exception: when the
+container cannot write its config directories (non-root user or `--read-only`), your command runs without that step,
+and PHP reads the environment variables from the `.ini` files directly.
 
 To customize the nginx configuration, change the file located in `/etc/nginx/nginx.conf` as needed for the best
 performance of your application. If you only want to change the root directory, use the environment variable `NGINX_ROOT`.
@@ -89,16 +107,7 @@ The settings can be customized easily by replacing the image tag with the desire
       docker run --rm -it fernandojrdev/php-nginx:8.4.27-alpine3.24 cat /etc/nginx/nginx.conf
       ```
 
-2. **PHP-FPM Configuration (`php-fpm.ini`)
-    - **Image Tag:** Replace `8.4.27-alpine3.24` with the desired image tag.
-    - **Environment Variables:** The image's entrypoint will automatically apply environment variables set during container startup.
-
-      To view the current configuration:
-      ```sh
-      docker run --rm -it fernandojrdev/php-nginx:8.4.27-alpine3.24 cat /usr/local/etc/php/php-fpm.ini
-      ```
-
-3. **PHP Configuration** (`php.ini`)
+2. **PHP Configuration** (`php.ini`)
     - **Image Tag:** Replace `8.4.27-alpine3.24` with the desired image tag.
 
       To view the current configuration:
@@ -106,7 +115,7 @@ The settings can be customized easily by replacing the image tag with the desire
       docker run --rm -it fernandojrdev/php-nginx:8.4.27-alpine3.24 cat /usr/local/etc/php/php.ini
       ```
 
-4. **OPcache Configuration** (`opcache.ini`)
+3. **OPcache Configuration** (`opcache.ini`)
     - **Image Tag:** Replace `8.4.27-alpine3.24` with the desired image tag.
     - **Environment Variables:** The image's entrypoint will automatically apply environment variables set during container startup.
     - **JIT:** Available only on `PHP 8 or higher` image tags.
@@ -116,7 +125,7 @@ The settings can be customized easily by replacing the image tag with the desire
       docker run --rm -it fernandojrdev/php-nginx:8.4.27-alpine3.24 cat /usr/local/etc/php/conf.d/opcache.ini
       ```
 
-5. **PHP Extensions Configuration** (`php-ext.ini`)
+4. **PHP Extensions Configuration** (`php-ext.ini`)
     - **Image Tag:** Replace `8.4.27-alpine3.24` with the desired image tag.
     - **Environment Variables:** The image's entrypoint will automatically apply environment variables set during container startup.
 
